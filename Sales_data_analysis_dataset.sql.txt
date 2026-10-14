@@ -1,0 +1,115 @@
+-- ==========================================
+-- SALES DATA ANALYSIS PROJECT
+-- Tool: MySQL
+-- Dataset: 1,200 sales records
+-- ==========================================
+
+-- 1. Overall Sales Performance
+SELECT
+    ROUND(SUM(Sales), 2) AS Total_Revenue,
+    ROUND(SUM(Profit), 2) AS Total_Profit,
+    SUM(Quantity) AS Total_Units_Sold,
+    COUNT(DISTINCT Order_ID) AS Total_Transactions,
+    ROUND(SUM(Profit) / SUM(Sales) * 100, 2) AS Profit_Margin
+FROM sales_data_analysis_dataset;
+
+-- 2. Yearly Sales Performance
+SELECT
+    YEAR(Order_Date) AS Sales_Year,
+    ROUND(SUM(Sales), 2) AS Revenue,
+    ROUND(SUM(Profit), 2) AS Profit,
+    SUM(Quantity) AS Units_Sold,
+    COUNT(DISTINCT Order_ID) AS Transactions
+FROM sales_data_analysis_dataset
+GROUP BY YEAR(Order_Date)
+ORDER BY Sales_Year;
+
+-- 3. Monthly Sales Performance
+SELECT
+    DATE_FORMAT(Order_Date, '%Y-%m') AS Sales_Month,
+    ROUND(SUM(Sales), 2) AS Revenue,
+    ROUND(SUM(Profit), 2) AS Profit,
+    ROUND(SUM(Profit) / SUM(Sales) * 100, 2) AS Profit_Margin
+FROM sales_data_analysis_dataset
+GROUP BY DATE_FORMAT(Order_Date, '%Y-%m')
+ORDER BY Sales_Month;
+
+-- 4. Product Category Performance
+SELECT
+    Category,
+    ROUND(SUM(Sales), 2) AS Revenue,
+    ROUND(SUM(Profit), 2) AS Profit,
+    SUM(Quantity) AS Units_Sold,
+    COUNT(DISTINCT Order_ID) AS Transactions,
+    ROUND(SUM(Profit) / SUM(Sales) * 100, 2) AS Profit_Margin
+FROM sales_data_analysis_dataset
+GROUP BY Category
+ORDER BY Revenue DESC;
+
+-- 5. Regional Performance
+SELECT
+    Region,
+    ROUND(SUM(Sales), 2) AS Revenue,
+    ROUND(SUM(Profit), 2) AS Profit,
+    SUM(Quantity) AS Units_Sold,
+    COUNT(DISTINCT Order_ID) AS Transactions,
+    ROUND(SUM(Profit) / SUM(Sales) * 100, 2) AS Profit_Margin
+FROM sales_data_analysis_dataset
+GROUP BY Region
+ORDER BY Revenue DESC;
+
+-- 6. Customer Segment Performance
+SELECT
+    Customer_Segment,
+    ROUND(SUM(Sales), 2) AS Revenue,
+    ROUND(SUM(Profit), 2) AS Profit,
+    SUM(Quantity) AS Units_Sold,
+    COUNT(DISTINCT Order_ID) AS Transactions,
+    ROUND(SUM(Profit) / SUM(Sales) * 100, 2) AS Profit_Margin
+FROM sales_data_analysis_dataset
+GROUP BY Customer_Segment
+ORDER BY Revenue DESC;
+
+-- 7. Top 10 Products by Revenue
+SELECT
+    Product_ID,
+    Product_Name,
+    ROUND(SUM(Sales), 2) AS Revenue,
+    ROUND(SUM(Profit), 2) AS Profit,
+    SUM(Quantity) AS Units_Sold
+FROM sales_data_analysis_dataset
+GROUP BY Product_ID, Product_Name
+ORDER BY Revenue DESC
+LIMIT 10;
+
+-- 8. Top 10 Customers by Revenue
+SELECT
+    Customer_ID,
+    ROUND(SUM(Sales), 2) AS Revenue,
+    ROUND(SUM(Profit), 2) AS Profit,
+    COUNT(DISTINCT Order_ID) AS Orders,
+    SUM(Quantity) AS Units_Sold
+FROM sales_data_analysis_dataset
+GROUP BY Customer_ID
+ORDER BY Revenue DESC
+LIMIT 10;
+
+-- 9. Discount Analysis
+SELECT
+    Discount,
+    ROUND(SUM(Sales), 2) AS Revenue,
+    ROUND(SUM(Profit), 2) AS Profit,
+    ROUND(SUM(Profit) / SUM(Sales) * 100, 2) AS Profit_Margin
+FROM sales_data_analysis_dataset
+GROUP BY Discount
+ORDER BY Discount;
+
+-- 10. Average Shipping Duration by Region
+SELECT
+    Region,
+    ROUND(AVG(DATEDIFF(Ship_Date, Order_Date)), 2)
+        AS Average_Shipping_Days,
+    COUNT(DISTINCT Order_ID) AS Transactions
+FROM sales_data_analysis_dataset
+GROUP BY Region
+ORDER BY Average_Shipping_Days DESC;
